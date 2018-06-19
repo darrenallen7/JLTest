@@ -17,6 +17,7 @@ class APIManager
     {
         static let baseURL: String = "https://api.johnlewis.com"
         static let listingPathFormat: String = "%@/v1/products/search?q=dishwasher&key=Wu1Xqn3vNrd1p7hqkvB6hEu0G9OrsYGb&pageSize=%i"
+        static let detailsPathFormat: String = "%@/v1/products/%@?key=Wu1Xqn3vNrd1p7hqkvB6hEu0G9OrsYGb"
         static let pageSize: Int = 20
     }
     
@@ -47,8 +48,31 @@ class APIManager
         
     }
     
+    func retrieveProductDetail(withProductID productID: String, completion: @escaping (_ details: ProductDetails?, _ error: Error?) -> Void)
+    {
+        let urlString = buildURLString(withProductID: productID)
+        guard let detailsURL = URL(string: urlString) else { return }
+        
+        let request = URLRequest(url: detailsURL)
+        
+        let dataTask = URLSession.shared.dataTask(with: request) {
+            data,response,error in
+            do {
+                if let returnedData = data
+                {
+                    let details = try JSONDecoder().decode(ProductDetails.self, from: returnedData)
+                    completion(details, nil)
+                }
+            } catch let error {
+                print(error.localizedDescription)
+                completion(nil, error)
+            }
+        }
+        dataTask.resume()
+    }
     
-    func buildURLString(withProductID productID: String? = nil) -> String
+    
+    private func buildURLString(withProductID productID: String? = nil) -> String
     {
         if productID == nil
         {
@@ -56,7 +80,7 @@ class APIManager
         }
         else
         {
+            return String(format: Constants.detailsPathFormat, Constants.baseURL, productID!)
         }
-        return ""
     }
 }

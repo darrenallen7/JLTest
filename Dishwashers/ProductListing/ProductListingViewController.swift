@@ -105,7 +105,10 @@ extension ProductListingViewController: UICollectionViewDelegate, UICollectionVi
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath)
     {
+        guard let currentProduct = products?[indexPath.item] else { return }
         
+        let vc = ProductDetailsBuilder.viewController(withProductID: currentProduct.productId)
+        self.navigationController?.pushViewController(vc, animated: true)
     }
 }
 
