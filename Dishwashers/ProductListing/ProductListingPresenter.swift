@@ -14,7 +14,7 @@ import Foundation
 protocol ProductListingPresenterInput
 {
     func presentRetrievalError()
-    func presentProducts(products: [Product])
+    func presentProducts(products: [Product], count: Int)
 }
 
 class ProductListingPresenter: ProductListingPresenterInput
@@ -27,8 +27,8 @@ class ProductListingPresenter: ProductListingPresenterInput
         output?.displayError(withTitle: "Sorry", andMessage: "There seems to have been a problem getting a list of products, please try again later.")
     }
     
-    func presentProducts(products: [Product])
+    func presentProducts(products: [Product], count: Int)
     {
-        output?.displayProductList(withProducts: products)
+        output?.displayProductList(withProducts: products, count: count)
     }
 }

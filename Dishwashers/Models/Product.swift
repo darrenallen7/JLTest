@@ -11,6 +11,7 @@ import UIKit
 
 struct Products: Codable {
     var products: [Product]
+    var results: Int
 }
 
 struct Product: Codable {

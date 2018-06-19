@@ -22,7 +22,7 @@ class APIManager
     
     static let sharedInstance = APIManager()
     
-    func retrieveProducts(completion: @escaping (_ products: [Product]?, _ error: Error?) -> Void)
+    func retrieveProducts(completion: @escaping (_ products: [Product]?, _ totalCount: Int?,  _ error: Error?) -> Void)
     {
         let urlString = buildURLString()
         guard let productURL = URL(string: urlString) else { return }
@@ -35,11 +35,12 @@ class APIManager
                 if let returnedData = data
                 {
                     let products = try JSONDecoder().decode(Products.self, from: returnedData).products
-                    completion(products, nil)
+                    let count = try JSONDecoder().decode(Products.self, from: returnedData).results
+                    completion(products, count, nil)
                 }
             } catch let error {
                 print(error.localizedDescription)
-                completion(nil, error)
+                completion(nil, nil, error)
             }
         }
         dataTask.resume()

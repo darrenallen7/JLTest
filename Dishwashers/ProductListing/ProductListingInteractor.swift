@@ -29,10 +29,10 @@ class ProductListingInteractor: ProductListingInteractorInput
     
     func getProducts()
     {
-        apiManager.retrieveProducts { (products, error) in
-            if let returnedProducts = products, error == nil
+        apiManager.retrieveProducts { (products, count, error) in
+            if let returnedProducts = products, let productCount = count, error == nil
             {
-                self.output?.presentProducts(products: returnedProducts)
+                self.output?.presentProducts(products: returnedProducts, count: productCount)
             }
             else
             {

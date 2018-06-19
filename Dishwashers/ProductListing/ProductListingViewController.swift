@@ -14,7 +14,7 @@ import UIKit
 protocol ProductListingViewControllerInput: class
 {
     func displayError(withTitle title: String, andMessage message: String)
-    func displayProductList(withProducts products: [Product])
+    func displayProductList(withProducts products: [Product], count: Int)
 }
 
 class ProductListingViewController: UIViewController, ProductListingViewControllerInput
@@ -49,15 +49,17 @@ class ProductListingViewController: UIViewController, ProductListingViewControll
         productCollectionView.dataSource = self
         productCollectionView.register(ProductCollectionViewCell.self, forCellWithReuseIdentifier: "ProductCell")
         self.view.addSubview(productCollectionView)
+        self.title = "Dishwashers"
         productCollectionView.constrainView(toView: self.view, withEdgeInsets: .zero)
         loadingOverlay.showOverlay(view: self.view)
         output?.getProducts()
     }
     
-    func displayProductList(withProducts products: [Product])
+    func displayProductList(withProducts products: [Product], count: Int)
     {
         self.products = products
         DispatchQueue.main.async {
+            self.title = "Dishwashers (\(count))"
             self.productCollectionView.reloadData()
             self.loadingOverlay.hideOverlayView()
         }
