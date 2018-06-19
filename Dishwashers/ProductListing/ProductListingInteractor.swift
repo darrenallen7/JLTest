@@ -13,16 +13,32 @@ import Foundation
 
 protocol ProductListingInteractorInput
 {
+    func getProducts()
 }
 
 class ProductListingInteractor: ProductListingInteractorInput
 {
     var output: ProductListingPresenterInput?
     var worker: ProductListingWorkerTasks
+    var apiManager = APIManager.sharedInstance
 
     required init(worker: ProductListingWorkerTasks = ProductListingWorker())
     {
         self.worker = worker
+    }
+    
+    func getProducts()
+    {
+        apiManager.retrieveProducts { (products, error) in
+            if let returnedProducts = products, error == nil
+            {
+                self.output?.presentProducts(products: returnedProducts)
+            }
+            else
+            {
+                self.output?.presentRetrievalError()
+            }
+        }
     }
 
     // MARK: - Business logic

@@ -16,9 +16,46 @@ class APIManager
     struct Constants
     {
         static let baseURL: String = "https://api.johnlewis.com"
-        static let listingPathFormat: String = "/v1/products/search?q=dishwasher&key=Wu1Xqn3vNrd1p7hqkvB6hEu0G9OrsYGb&pageSize=%i"
+        static let listingPathFormat: String = "%@/v1/products/search?q=dishwasher&key=Wu1Xqn3vNrd1p7hqkvB6hEu0G9OrsYGb&pageSize=%i"
         static let pageSize: Int = 20
     }
     
     static let sharedInstance = APIManager()
+    
+    func retrieveProducts(completion: @escaping (_ products: [Product]?, _ error: Error?) -> Void)
+    {
+        let urlString = buildURLString()
+        guard let productURL = URL(string: urlString) else { return }
+        
+        let request = URLRequest(url: productURL)
+        
+        let dataTask = URLSession.shared.dataTask(with: request) {
+            data,response,error in
+            do {
+                if let returnedData = data
+                {
+                    let products = try JSONDecoder().decode(Products.self, from: returnedData).products
+                    completion(products, nil)
+                }
+            } catch let error {
+                print(error.localizedDescription)
+                completion(nil, error)
+            }
+        }
+        dataTask.resume()
+        
+    }
+    
+    
+    func buildURLString(withProductID productID: String? = nil) -> String
+    {
+        if productID == nil
+        {
+            return String(format: Constants.listingPathFormat, Constants.baseURL, Constants.pageSize)
+        }
+        else
+        {
+        }
+        return ""
+    }
 }

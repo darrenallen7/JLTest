@@ -17,7 +17,12 @@ struct Product: Codable {
     var productId: String
     var price: Price
     var title: String
-    var image: URL
+    var image: String
+    
+    func displayImageURL() -> URL?
+    {
+        return URL(string: "https:\(image)")
+    }
 }
 
 struct Price: Codable {
@@ -27,4 +32,14 @@ struct Price: Codable {
     var now: String
     var uom: String
     var currency: String
+    
+    func displayPrice() -> String
+    {
+        var priceString = ""
+        priceString.append("£") // hard coding to £ but would have a method to select correct symbol for currency code.
+        
+        priceString.append(String(now))
+        
+        return priceString
+    }
 }

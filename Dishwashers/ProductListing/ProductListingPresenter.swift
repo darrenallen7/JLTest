@@ -13,7 +13,8 @@ import Foundation
 
 protocol ProductListingPresenterInput
 {
-    
+    func presentRetrievalError()
+    func presentProducts(products: [Product])
 }
 
 class ProductListingPresenter: ProductListingPresenterInput
@@ -21,4 +22,13 @@ class ProductListingPresenter: ProductListingPresenterInput
     weak var output: ProductListingViewControllerInput?
 
     // MARK: - Presentation logic
+    func presentRetrievalError()
+    {
+        output?.displayError(withTitle: "Sorry", andMessage: "There seems to have been a problem getting a list of products, please try again later.")
+    }
+    
+    func presentProducts(products: [Product])
+    {
+        output?.displayProductList(withProducts: products)
+    }
 }
